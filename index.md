@@ -1,6 +1,7 @@
 ---
 title: Welkom
 layout: center
+navigation: false
 ---
 
 # 👋 Welkom bij mijn project
