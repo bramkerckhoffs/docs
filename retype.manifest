@@ -1,6 +1,6 @@
 {
   "version": "3.7.0",
-  "created": "2025-04-13T12:05:52Z",
+  "created": "2025-04-13T12:08:39Z",
   "files": [
     {
       "path": ".nojekyll"
@@ -58,7 +58,8 @@
       "path": "sitemap.xml.gz"
     },
     {
-      "path": "welcome\\index.html"
+      "path": "welcome\\index.html",
+      "old": true
     }
   ]
 }
