@@ -1,6 +1,7 @@
 input: .
 output: .retype
-url: bramkerckhoffs.github.io/docs/
+url:
+  base: /docs/
 branding:
   title: Bram's
   label: Docs
