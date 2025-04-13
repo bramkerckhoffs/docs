@@ -1,20 +1,11 @@
 ---
-author: Frank
+title: Welkom
+layout: center
 ---
-# test
-test
 
-test
+# 👋 Welkom bij mijn project
 
-## Minecraft
-test
+Dit is de startpagina van deze site.  
+Je vindt hier informatie, links, en meer.
 
-## Zoek
-
-### hallo
-
-Dit is een test bericht
-zin 2
-zin 3
-zin 4
-ja test 5
+[Ga naar de documentatie](getting-started.md)
