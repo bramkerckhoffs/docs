@@ -1,6 +1,5 @@
 ---
-title: Welkom
+title: Azure App Service
 layout: center
-icon: rocket
 ---
 # Artikel 1

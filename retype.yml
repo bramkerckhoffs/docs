@@ -7,10 +7,3 @@ branding:
   label: Docs
 footer:
   copyright: "&copy; Copyright {{ year }}. All rights reserved."
-
-sidebar:
-  - label: 📚 Artikelen
-    icon: rocket
-    pages:
-      - sample/artikel-1.md
-      - sample/artikel-2.md
