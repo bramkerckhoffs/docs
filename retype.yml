@@ -10,6 +10,7 @@ footer:
 
 sidebar:
   - label: 📚 Artikelen
+    icon: rocket
     pages:
       - sample/artikel-1.md
       - sample/artikel-2.md
