@@ -1,5 +1,5 @@
 ---
-title: Azure
-layout: center
-icon: cloud-24
+order: 1000
+icon: book
+expanded: true
 ---
