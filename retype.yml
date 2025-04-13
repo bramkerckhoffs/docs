@@ -2,12 +2,7 @@ input: .
 output: .retype
 url: bramkerckhoffs.github.io/docs/
 branding:
-  title: Project Name
+  title: Bram's
   label: Docs
-links:
-- text: Getting Started
-  link: https://retype.com/guides/getting-started/
-editor:
-- enabled: true 
 footer:
   copyright: "&copy; Copyright {{ year }}. All rights reserved."
