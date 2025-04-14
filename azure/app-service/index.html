@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.7.0.797966487302">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.7.0.797972836076">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.7.0">
 
     <!-- Primary Meta Tags -->
-    <title>Azure App Service</title>
-    <meta name="title" content="Azure App Service">
+    <title>Azure App Service plan</title>
+    <meta name="title" content="Azure App Service plan">
+    <meta name="description" content="Voordat ik de omschrijving verder toelicht, laten we beginnen hoe Microsoft een Azure App Service Plan defineerd:">
 
     <!-- Canonical -->
     <link rel="canonical" href="/azure/app-service/">
@@ -18,20 +19,22 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="/azure/app-service/">
-    <meta property="og:title" content="Azure App Service">
+    <meta property="og:title" content="Azure App Service plan">
+    <meta property="og:description" content="Voordat ik de omschrijving verder toelicht, laten we beginnen hoe Microsoft een Azure App Service Plan defineerd:">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="/azure/app-service/">
-    <meta property="twitter:title" content="Azure App Service">
+    <meta property="twitter:title" content="Azure App Service plan">
+    <meta property="twitter:description" content="Voordat ik de omschrijving verder toelicht, laten we beginnen hoe Microsoft een Azure App Service Plan defineerd:">
 
     <script data-cfasync="false">(function () { var el = document.documentElement, m = localStorage.getItem("doc_theme"), wm = window.matchMedia; if (m === "dark" || (!m && wm && wm("(prefers-color-scheme: dark)").matches)) { el.classList.add("dark") } else { el.classList.remove("dark") } })();</script>
 
-    <link href="../../resources/css/retype.css?v=3.7.0.797966487302" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.7.0.797972836076" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.7.0.797966487302" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.7.0.797972836076" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.7.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.7.0.797966487302" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.7.0.797972836076" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="docs-app" class="relative text-base antialiased text-gray-700 bg-white font-body dark:bg-dark-850 dark:text-dark-300">
@@ -145,12 +148,76 @@
                                 <!-- Rendered if sidebar right is enabled -->
                                 <div id="docs-sidebar-right-toggle"></div>
                                 <!-- Page content  -->
-<doc-anchor-target id="artikel-1" class="break-words">
+<doc-anchor-target id="wat-is-een-azure-app-service-plan" class="break-words">
     <h1>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#artikel-1">#</doc-anchor-trigger>
-        <span>Artikel 1</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#wat-is-een-azure-app-service-plan">#</doc-anchor-trigger>
+        <span>Wat is een Azure app service plan?</span>
     </h1>
 </doc-anchor-target>
+<p>Voordat ik de omschrijving verder toelicht, laten we beginnen hoe <a href="https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans">Microsoft</a> een Azure App Service Plan defineerd:</p>
+<blockquote>
+<p>An Azure App Service plan defines a set of compute resources for a web app to run. An app service always runs in an App Service plan. Azure Functions also has the option of running in an App Service plan.</p>
+</blockquote>
+<p>De naam zegt het al deels, maar een Azure App Service Plan is een verzameling <em>compute resources</em> voor het draaien van een webapplicatie. Bij het aanmaken van een Azure Plan Service Plan ben je altijd vereist om OS-Type te definieren (Windows of Linux), regio (West europa), aantal en grote van virtual machines en de pricing tier (Free, Shared, Basic, Standard, Premium, PremiumV2, PremiumV3, IsolatedV2).</p>
+<p>In de documentatie van <a href="https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans#pricing-tiers">Microsoft</a> zijn de pricing tiers uitgebreid toegelicht van App Service. De belangrijkste kenmerken van de pricing tiers heb ik hieronder kort opgesomd:</p>
+<ul>
+<li>Shared compute (Free, Shared): Je deelte de compute resources met andere Azure klanten. De Azure app zal voor elke App CPU quotas hanteren. Je hebt de mogelijk niet om uit te breiden.</li>
+<li>Dedicated compute (Basic, Standard, Premium, PremiumV2, PremiumV3): Alleen apps in dezelfde Azure Plan service delen dezelfde resources. Hoe hoger de tier, hoe meer VM je kan opschalen.</li>
+<li>Isolated (IsolatedV2): Virtual machines draaien op een eigen virtual network. Hierdoor heb je beschikking over netwerk isolatie bovenop te compute isolatie. In deze tier heb je de meeste schaalbaarheid.</li>
+</ul>
+<p>Buiten de schaalbaarheid, zijn per tier ook extra functionaliteiten opgesteld. Microsoft geeft aandat je niet voor de functionaliteiten betaald, dus als je ze inzet, maar alleen voor de geselecteerde tier. Bijvoorbeeld in de free tier, kan je geen certificaten gebruiken voor je web app. Hiervoor heb je minimaal de basic tier nodig. Microsoft heeft dit op deze <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-app-service-limits">pagina</a> uitgebreid toegelicht door middel van een tabel. Microsoft geeft als voorbeeld aan dat je met de basic tier kan beginnen, en als je meer functionaliteiten nodig hebt zoals een custom domain, dan kan je opschalen naar een shared tier. Mocht je opnieuw een functionaliteit nodig hebben als TLS binding, dan kan je opnieuw opschalen naar de basic tier. Je kan ook weer downgraden.</p>
+<doc-anchor-target id="wanneer-meer-app-service-plans-aanmaken">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#wanneer-meer-app-service-plans-aanmaken">#</doc-anchor-trigger>
+        <span>Wanneer meer App service plans aanmaken?</span>
+    </h2>
+</doc-anchor-target>
+<p>Ik denk dat het belangrijk is om te vermelden wanneer het handig is om aparte App Service Plans te creëren. Afhankelijk van de tier betaal je voor de CPU quota (shared tier), het aantal VM instances (basic, premium tier) of isolated workers (Isolated V2 tier).</p>
+<p>Het creëren van veel App Service Plans kan aantrekkelijk lijken, maar het kan ook aanzienlijke kosten met zich meebrengen. Daarnaast moet je rekening houden met het feit dat alle apps in een App Service Plan dezelfde compute resources delen. Als je dus drie apps draait in één App Service Plan, zullen al deze apps dezelfde resources gebruiken.</p>
+<doc-anchor-target id="scale-up-an-app-in-azure-app-service">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#scale-up-an-app-in-azure-app-service">#</doc-anchor-trigger>
+        <span>Scale up an app in Azure App Service</span>
+    </h2>
+</doc-anchor-target>
+<p>Microsoft biedt twee schaalbaarheidsopties aan. Een hiervan is &quot;Scale Up&quot; (ook wel vertical scaling genoemd), wat betekent dat je extra resources toekent aan een Azure VM instance. De andere mogelijkheid is &quot;Scale Out&quot; (ook wel horizontal scaling genoemd), wat inhoudt dat je meer VM instances toevoegt.</p>
+<doc-anchor-target id="scale-up-app-service-plan">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#scale-up-app-service-plan">#</doc-anchor-trigger>
+        <span>Scale up (App Service plan)</span>
+    </h3>
+</doc-anchor-target>
+<p>Zoals hierboven al is toegelicht, kun je de resources van een VM instance uitbreiden. Dit kun je eenvoudig doen door het Azure App Service Plan te openen, vervolgens het menu &quot;Settings&quot; te openen en &quot;Scale up (App Service Plan)&quot; te selecteren. In het geopende venster kun je vervolgens je plan selecteren.</p>
+<p><figure class="content-center">
+    <img src="image.png" alt="Scale up">
+    <figcaption class="caption">Scale up</figcaption>
+</figure>
+</p>
+<doc-anchor-target id="scale-out-app-service-plan">
+    <h3>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#scale-out-app-service-plan">#</doc-anchor-trigger>
+        <span>Scale out (App Service plan)</span>
+    </h3>
+</doc-anchor-target>
+<p>Bij &quot;Scale Out&quot; kun je afhankelijk van de tier, meerdere VM instances beschikbaar stellen voor een app. In het onderstaande voorbeeld ben ik beperkt tot 3 virtual machine instances, omdat ik gebruikmaak van de Basic tier. Dit komt overeen met de Microsoft <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-app-service-limits">Azure App Service-limieten</a>.</p>
+<p><figure class="content-center">
+    <img src="image-1.png" alt="Scale out">
+    <figcaption class="caption">Scale out</figcaption>
+</figure>
+Als je goed kijkt naar de bovenstaande screenshot, is het ook mogelijk om automatisch uit te breiden. In mijn voorbeeld kan ik dit niet, omdat een Premium tier vereist is voor Automatic Scaling in het Azure App Service Plan. Dit staat ook beschreven op de <a href="https://learn.microsoft.com/en-us/azure/app-service/manage-automatic-scaling?tabs=azure-portal">Microsoft Docs</a> pagina.</p>
+<p>Een App Service monitort het verkeer. Wanneer de traffic zodanig hoog is voor een Azure VM instance, zal de Azure App Service een extra instance toevoegen. Tijdens het configureren van Automatic Scaling kun je het aantal burst instanties instellen. Dit zijn de maximale web instances die voor de app kunnen worden toegevoegd. Het is ook mogelijk om een minimum aantal beschikbare web instances in te stellen. Daarintegen kan je ook maximale web instances selecteren.</p>
+<p><figure class="content-center">
+    <img src="image-2.png" alt="Automatic scaling">
+    <figcaption class="caption">Automatic scaling</figcaption>
+</figure>
+</p>
+<doc-anchor-target id="configureer-certificates-and-transport-layer-security-tls">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#configureer-certificates-and-transport-layer-security-tls">#</doc-anchor-trigger>
+        <span>Configureer certificates and Transport Layer Security (TLS)</span>
+    </h2>
+</doc-anchor-target>
+<p>Standaard heeft een aangemaakte app geen certificaat. Als je dit toch wilt, heb je minimaal een Basic tier nodig. Beschik je nog over een Free of Shared tier? Dan kun je eenvoudig uitbreiden via &quot;Scale Up.&quot; Zodra je dit hebt ingesteld, kun je in het App Service Plan gemakkelijk een Azure managed certificaat toevoegen.</p>
 
                                 
                                 <!-- Required only on API pages -->
@@ -210,6 +277,6 @@
 
     <div id="docs-overlay-target"></div>
 
-    <script data-cfasync="false">window.__DOCS__ = { "title": "Azure App Service", level: 2, icon: "file", hasPrism: false, hasMermaid: false, hasMath: false, tocDepth: 23 }</script>
+    <script data-cfasync="false">window.__DOCS__ = { "title": "Azure App Service plan", level: 2, icon: "file", hasPrism: false, hasMermaid: false, hasMath: false, tocDepth: 23 }</script>
 </body>
 </html>
