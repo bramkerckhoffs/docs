@@ -1,0 +1,61 @@
+{{ define "main" }}
+
+{{ $allPages := where .Site.RegularPages "Section" "ne" "" }}
+{{ $totalPages := len $allPages }}
+
+<div class="home-header">
+  <div class="home-brand">Bram Kerckhoffs</div>
+  <p class="home-tagline">Persoonlijke kennisbank — Infrastructure as Code, Azure & meer.</p>
+
+  <div class="home-stats">
+    <div class="stat">
+      <span class="stat-num">{{ $totalPages }}</span>
+      <span class="stat-label">artikelen</span>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat">
+      <span class="stat-num">{{ len .Site.Sections }}</span>
+      <span class="stat-label">secties</span>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat">
+      <span class="stat-num">{{ with (first 1 ($allPages.ByDate.Reverse)) }}{{ range . }}{{ .Date.Format "Jan '06" }}{{ end }}{{ end }}</span>
+      <span class="stat-label">laatste update</span>
+    </div>
+  </div>
+</div>
+
+{{/* Sectie overzicht */}}
+<div class="home-section-title">Secties</div>
+<div class="home-sections">
+  {{ range .Site.Sections }}
+  {{ $count := len .Pages }}
+  {{ $recent := first 1 (.Pages.ByDate.Reverse) }}
+  <a class="home-section-card" href="{{ .RelPermalink }}">
+    <div class="hsc-icon">{{ partial "section-icon.html" . }}</div>
+    <div class="hsc-body">
+      <div class="hsc-title">{{ .Title }}</div>
+      <div class="hsc-desc">{{ with .Params.description }}{{ . }}{{ end }}</div>
+      <div class="hsc-meta">{{ $count }} {{ if eq $count 1 }}artikel{{ else }}artikelen{{ end }}</div>
+      {{ range $recent }}{{ if not .Date.IsZero }}
+      <div class="hsc-updated">Bijgewerkt {{ .Date.Format "02 Jan 2006" }}</div>
+      {{ end }}{{ end }}
+    </div>
+    <span class="hsc-arrow">→</span>
+  </a>
+  {{ end }}
+</div>
+
+{{/* Recente artikelen */}}
+<div class="home-section-title" style="margin-top: 48px;">Recent bijgewerkt</div>
+<div class="recent-list">
+  {{ range first 8 ($allPages.ByDate.Reverse) }}
+  <a class="recent-item" href="{{ .RelPermalink }}">
+    <span class="recent-section">{{ .Section | title }}</span>
+    <span class="recent-title">{{ .Title }}</span>
+    <span class="recent-date">{{ .Date.Format "02 Jan" }}</span>
+  </a>
+  {{ end }}
+</div>
+
+{{ end }}

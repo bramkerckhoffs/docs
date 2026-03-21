@@ -1,0 +1,65 @@
+{{ define "main" }}
+
+<div class="page-eyebrow">{{ .Section | title }}</div>
+<h1>{{ .Title }}</h1>
+
+{{ with .Params.description }}
+<p class="page-intro">{{ . }}</p>
+{{ end }}
+
+{{ $pages := .Pages.ByWeight }}
+
+{{/* Collect groups */}}
+{{ $groups := slice }}
+{{ range $pages }}
+  {{ with .Params.group }}
+    {{ if not (in $groups .) }}{{ $groups = $groups | append . }}{{ end }}
+  {{ end }}
+{{ end }}
+{{ $hasGroups := gt (len $groups) 0 }}
+
+{{ if $hasGroups }}
+
+  {{/* Ungrouped first */}}
+  {{ $ungrouped := where $pages "Params.group" nil }}
+  {{ range $ungrouped }}
+  <a class="doc-card" href="{{ .RelPermalink }}">
+    <span class="doc-card-title">{{ .Title }}</span>
+    {{ with .Params.intro }}<span class="doc-card-desc">{{ . }}</span>{{ end }}
+  </a>
+  {{ end }}
+
+  {{/* Groups */}}
+  {{ range $groups }}
+  {{ $group := . }}
+  <div class="list-group-label">{{ $group }}</div>
+  <div class="doc-cards">
+    {{ range where $pages "Params.group" $group }}
+    <a class="doc-card" href="{{ .RelPermalink }}">
+      <span class="doc-card-title">{{ .Title }}</span>
+      {{ with .Params.intro }}<span class="doc-card-desc">{{ . }}</span>{{ end }}
+    </a>
+    {{ end }}
+  </div>
+  {{ end }}
+
+{{ else }}
+
+  {{/* Flat list as cards */}}
+  <div class="doc-cards">
+    {{ range $pages }}
+    <a class="doc-card" href="{{ .RelPermalink }}">
+      <span class="doc-card-title">{{ .Title }}</span>
+      {{ with .Params.intro }}<span class="doc-card-desc">{{ . }}</span>{{ end }}
+      {{ with .Params.tags }}
+      <span class="doc-card-tags">
+        {{ range . }}<span class="doc-tag">{{ . }}</span>{{ end }}
+      </span>
+      {{ end }}
+    </a>
+    {{ end }}
+  </div>
+
+{{ end }}
+
+{{ end }}

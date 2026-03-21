@@ -1,0 +1,135 @@
+{{/* ── Icon Rail ── */}}
+<nav class="nav-rail" id="navRail">
+
+  <a href="/" class="rail-logo" id="railLogo" title="Bram Kerckhoffs — home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 6h16M4 12h10M4 18h6"/>
+    </svg>
+  </a>
+
+  {{ range .Site.Sections }}
+  {{ $active := or (eq $.Page.Section .Section) ($.Page.IsDescendant .) }}
+  <button class="rail-item{{ if $active }} is-active{{ end }}"
+          data-panel="{{ .Section }}"
+          onclick="togglePanel('{{ .Section }}')"
+          title="{{ .Title }}">
+    {{ partial "section-icon.html" . }}
+  </button>
+  {{ end }}
+
+  <div class="rail-spacer"></div>
+
+  <a href="/tags/" class="rail-item{{ if eq .Page.Type "tags" }} is-active{{ end }}" title="Tags">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+      <line x1="7" y1="7" x2="7.01" y2="7"/>
+    </svg>
+  </a>
+
+  <div class="rail-brand">BK</div>
+
+  {{ with .Site.Params.version }}
+  <div class="rail-version">v{{ . }}</div>
+  {{ end }}
+
+</nav>
+
+{{/* ── Slide-out panels (één per sectie) ── */}}
+{{ range .Site.Sections }}
+{{ $active    := or (eq $.Page.Section .Section) ($.Page.IsDescendant .) }}
+{{ $pages     := .Pages.ByWeight }}
+{{ $pageCount := len $pages }}
+{{ $limit     := 7 }}
+
+{{ $groups := slice }}
+{{ range $pages }}
+  {{ with .Params.group }}
+    {{ if not (in $groups .) }}{{ $groups = $groups | append . }}{{ end }}
+  {{ end }}
+{{ end }}
+{{ $hasGroups := gt (len $groups) 0 }}
+
+<div class="nav-panel{{ if $active }} is-open{{ end }}" data-panel="{{ .Section }}">
+
+  <div class="panel-header">
+    <span class="panel-icon">{{ partial "section-icon.html" . }}</span>
+    <a href="{{ .RelPermalink }}" class="panel-title">{{ .Title }}</a>
+  </div>
+
+  <nav class="panel-nav">
+    {{ if $hasGroups }}
+      {{ range where $pages "Params.group" nil }}
+      <a href="{{ .RelPermalink }}" class="panel-item{{ if eq $.Page.RelPermalink .RelPermalink }} active{{ end }}">{{ .Title }}</a>
+      {{ end }}
+      {{ range $groups }}
+      {{ $g := . }}
+      <div class="panel-group-label">{{ $g }}</div>
+      {{ range where $pages "Params.group" $g }}
+      <a href="{{ .RelPermalink }}" class="panel-item{{ if eq $.Page.RelPermalink .RelPermalink }} active{{ end }}">{{ .Title }}</a>
+      {{ end }}
+      {{ end }}
+    {{ else }}
+      {{ range first $limit $pages }}
+      <a href="{{ .RelPermalink }}" class="panel-item{{ if eq $.Page.RelPermalink .RelPermalink }} active{{ end }}">{{ .Title }}</a>
+      {{ end }}
+      {{ if gt $pageCount $limit }}
+      <a href="{{ .RelPermalink }}" class="panel-item panel-more">Meer ({{ sub $pageCount $limit }}) →</a>
+      {{ end }}
+    {{ end }}
+  </nav>
+
+</div>
+{{ end }}
+
+
+<script>
+(function () {
+  var openId = null;
+
+  /* Auto-open actieve sectie bij paginaload */
+  var init = document.querySelector('.nav-panel.is-open');
+  if (init) {
+    openId = init.getAttribute('data-panel');
+    document.body.classList.add('panel-open');
+    var rb = document.querySelector('.rail-item[data-panel="' + openId + '"]');
+    if (rb) rb.classList.add('is-active');
+  }
+
+  window.togglePanel = function (id) {
+    var panel = document.querySelector('.nav-panel[data-panel="' + id + '"]');
+    var ritem = document.querySelector('.rail-item[data-panel="' + id + '"]');
+
+    if (openId === id) {
+      panel.classList.remove('is-open');
+      if (ritem) ritem.classList.remove('is-active');
+      document.body.classList.remove('panel-open');
+      openId = null;
+    } else {
+      if (openId) {
+        document.querySelector('.nav-panel[data-panel="' + openId + '"]')?.classList.remove('is-open');
+        document.querySelector('.rail-item[data-panel="' + openId + '"]')?.classList.remove('is-active');
+      }
+      panel.classList.add('is-open');
+      if (ritem) ritem.classList.add('is-active');
+      document.body.classList.add('panel-open');
+      openId = id;
+    }
+  };
+
+  /* Logo: sluit panel smooth, dan navigeer naar home */
+  var logo = document.getElementById('railLogo');
+  if (logo) {
+    logo.addEventListener('click', function (e) {
+      if (openId) {
+        e.preventDefault();
+        var dest = this.getAttribute('href');
+        document.querySelector('.nav-panel[data-panel="' + openId + '"]')?.classList.remove('is-open');
+        document.querySelector('.rail-item[data-panel="' + openId + '"]')?.classList.remove('is-active');
+        document.body.classList.remove('panel-open');
+        openId = null;
+        setTimeout(function () { window.location.href = dest; }, 310);
+      }
+    });
+  }
+})();
+</script>

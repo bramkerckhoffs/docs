@@ -1,0 +1,98 @@
+{{ define "main" }}
+
+<div class="page-eyebrow">Zoeken</div>
+<h1>Artikelen op tag</h1>
+<p class="page-intro">Selecteer één of meerdere tags. Alleen artikelen die <em>alle</em> geselecteerde tags bevatten worden getoond.</p>
+
+<div class="tag-filters" id="tagFilters">
+  {{ range $name, $pages := .Site.Taxonomies.tags }}
+  <button class="tag-filter" data-tag="{{ $name }}">
+    {{ $name }}<span class="tag-filter-count">{{ len $pages }}</span>
+  </button>
+  {{ end }}
+</div>
+
+<div class="filter-status" id="filterStatus"></div>
+
+<div id="filteredArticles">
+  {{ range .Site.RegularPages }}
+  {{ $tags := .Params.tags }}
+  {{ if $tags }}
+  <a class="doc-card" href="{{ .RelPermalink }}" data-tags="|{{ delimit $tags "|" }}|">
+    <span class="doc-card-title">{{ .Title }}</span>
+    {{ with .Params.intro }}<span class="doc-card-desc">{{ . }}</span>{{ end }}
+    <div class="doc-card-row">
+      <span class="doc-card-meta">{{ .Section | title }}{{ with .Date }} · {{ .Format "02 Jan 2006" }}{{ end }}</span>
+      <span class="doc-card-tags">{{ range $tags }}<span class="doc-tag">{{ . }}</span>{{ end }}</span>
+    </div>
+  </a>
+  {{ end }}
+  {{ end }}
+</div>
+
+<script>
+(function () {
+  var active     = new Set();
+  var filtersEl  = document.getElementById('tagFilters');
+  var articlesEl = document.getElementById('filteredArticles');
+  var statusEl   = document.getElementById('filterStatus');
+
+  /* Pre-select tags from URL ?t=tag1,tag2 */
+  var params = new URLSearchParams(window.location.search);
+  var preset = params.get('t');
+  if (preset) {
+    preset.split(',').forEach(function (t) {
+      t = t.trim();
+      if (!t) return;
+      active.add(t);
+      var btn = filtersEl.querySelector('[data-tag="' + t + '"]');
+      if (btn) btn.classList.add('is-active');
+    });
+    applyFilter();
+  }
+
+  filtersEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('.tag-filter');
+    if (!btn) return;
+    var tag = btn.dataset.tag;
+    if (active.has(tag)) { active.delete(tag); btn.classList.remove('is-active'); }
+    else                  { active.add(tag);    btn.classList.add('is-active'); }
+    updateURL();
+    applyFilter();
+  });
+
+  function applyFilter() {
+    var cards = articlesEl.querySelectorAll('.doc-card');
+    var visible = 0;
+    cards.forEach(function (card) {
+      var show;
+      if (active.size === 0) {
+        show = true;
+      } else {
+        var cardTags = card.dataset.tags || '';
+        show = Array.from(active).every(function (t) {
+          return cardTags.indexOf('|' + t + '|') !== -1;
+        });
+      }
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (active.size > 0) {
+      statusEl.textContent = visible + ' artikel' + (visible === 1 ? '' : 'en') + ' met ' +
+        Array.from(active).map(function (t) { return '"' + t + '"'; }).join(' + ');
+    } else {
+      statusEl.textContent = '';
+    }
+  }
+
+  function updateURL() {
+    var url = new URL(window.location);
+    if (active.size > 0) { url.searchParams.set('t', Array.from(active).join(',')); }
+    else { url.searchParams.delete('t'); }
+    history.replaceState(null, '', url);
+  }
+})();
+</script>
+
+{{ end }}

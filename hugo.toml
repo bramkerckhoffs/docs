@@ -1,0 +1,18 @@
+baseURL = 'https://bramkerckhoffs.github.io/docs/'
+languageCode = 'nl'
+title = 'Bram Kerckhoffs'
+enableGitInfo = false
+
+[markup.highlight]
+  style = 'dracula'
+  lineNos = false
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[params]
+  description = "Persoonlijke documentatie voor Terraform & Azure"
+  version = "1.0"

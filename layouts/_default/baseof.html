@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "nl" }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
+  <meta name="description" content="{{ .Site.Params.description }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/docs.css">
+  {{/* Schakel transitie uit bij initial load zodat margin niet springt */}}
+  <script>document.documentElement.classList.add('no-transition');</script>
+</head>
+{{/* panel-open server-side: voorkomt layout-jump als JS de class later toevoegt */}}
+{{ $panelOpen := and (not .IsHome) (ne .Section "") }}
+<body{{ if $panelOpen }} class="panel-open"{{ end }}>
+
+  {{ partial "sidebar.html" . }}
+  {{ partial "mobile-nav.html" . }}
+  {{ partial "search.html" . }}
+
+  <div class="main">
+    <div class="topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      {{ partial "breadcrumb.html" . }}
+      <button class="topbar-search-btn" onclick="openSearch()" title="Zoeken (Ctrl+K)" aria-label="Zoeken">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <kbd>Ctrl K</kbd>
+      </button>
+    </div>
+    <div class="content">
+      {{ block "main" . }}{{ end }}
+    </div>
+  </div>
+
+  {{/* Mobiele nav */}}
+  <script>
+  (function () {
+    var open    = document.getElementById('mobileMenuBtn');
+    var close   = document.getElementById('mobileNavClose');
+    var overlay = document.getElementById('mobileNavOverlay');
+    function openNav()  { document.body.classList.add('mobile-nav-open'); }
+    function closeNav() { document.body.classList.remove('mobile-nav-open'); }
+    if (open)    open.addEventListener('click', openNav);
+    if (close)   close.addEventListener('click', closeNav);
+    if (overlay) overlay.addEventListener('click', closeNav);
+    document.querySelectorAll('.mobile-nav .mobile-item, .mobile-nav .mobile-subitem').forEach(function (a) {
+      a.addEventListener('click', closeNav);
+    });
+  })();
+  </script>
+
+  {{/* Code blokken: header met taaltype + copy knop */}}
+  <script>
+  (function () {
+    var COPY  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>';
+    var LABELS = {
+      hcl:'HCL', tf:'Terraform', bash:'Bash', sh:'Shell',
+      powershell:'PowerShell', ps1:'PowerShell',
+      yaml:'YAML', yml:'YAML', json:'JSON',
+      python:'Python', py:'Python',
+      go:'Go', js:'JavaScript', ts:'TypeScript',
+      sql:'SQL', html:'HTML', css:'CSS',
+      dockerfile:'Dockerfile', toml:'TOML', ini:'INI',
+    };
+    document.querySelectorAll('.highlight').forEach(function (block) {
+      var code = block.querySelector('code');
+      var lang = '';
+      if (code) { var m = code.className.match(/language-(\w+)/); if (m) lang = m[1].toLowerCase(); }
+      var header = document.createElement('div');
+      header.className = 'code-header';
+      var label = document.createElement('span');
+      label.className = 'code-lang';
+      label.textContent = LABELS[lang] || (lang && lang !== 'plaintext' ? lang.toUpperCase() : '');
+      header.appendChild(label);
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn'; btn.innerHTML = COPY; btn.title = 'Kopieer';
+      header.appendChild(btn);
+      block.insertBefore(header, block.firstChild);
+      btn.addEventListener('click', function () {
+        var text = (block.querySelector('pre') || block).innerText;
+        navigator.clipboard.writeText(text).then(function () {
+          btn.innerHTML = CHECK; btn.classList.add('copied');
+          setTimeout(function () { btn.innerHTML = COPY; btn.classList.remove('copied'); }, 2000);
+        });
+      });
+    });
+  })();
+  </script>
+
+  {{/* Mermaid — alleen laden als de pagina diagrammen heeft */}}
+  {{/* Heractiveer transities na eerste render */}}
+  <script>
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      document.documentElement.classList.remove('no-transition');
+    });
+  });
+  </script>
+
+  {{ if .Content | strings.Contains "mermaid" }}
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true, theme: 'base',
+      themeVariables: {
+        background:'#181818', primaryColor:'#1e2a1e', primaryTextColor:'#e8e6e0',
+        primaryBorderColor:'#2a2a2a', lineColor:'#3ecf8e', secondaryColor:'#1a1a1a',
+        tertiaryColor:'#222222', edgeLabelBackground:'#141414', titleColor:'#e8e6e0',
+      }
+    });
+  </script>
+  {{ end }}
+
+</body>
+</html>

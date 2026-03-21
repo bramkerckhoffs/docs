@@ -1,0 +1,126 @@
+<!-- Search modal -->
+<div class="search-overlay" id="searchOverlay" aria-hidden="true">
+  <div class="search-modal" role="dialog" aria-label="Zoeken">
+    <div class="search-input-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input id="searchInput" type="text" placeholder="Zoek artikelen…" autocomplete="off" spellcheck="false">
+      <kbd class="search-esc">Esc</kbd>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-footer">
+      <span><kbd>↑↓</kbd> navigeren</span>
+      <span><kbd>↵</kbd> openen</span>
+      <span><kbd>Esc</kbd> sluiten</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var overlay  = document.getElementById('searchOverlay');
+  var input    = document.getElementById('searchInput');
+  var results  = document.getElementById('searchResults');
+  var index    = null;
+  var selected = -1;
+
+  function open() {
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    input.value = '';
+    results.innerHTML = '';
+    selected = -1;
+    input.focus();
+    if (!index) loadIndex();
+  }
+
+  function close() {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+  }
+
+  function loadIndex() {
+    fetch('/index.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        index = data;
+        if (input.value) search(input.value);
+      });
+  }
+
+  function search(q) {
+    if (!index || !q.trim()) { results.innerHTML = ''; selected = -1; return; }
+    var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+
+    var scored = index.map(function(p) {
+      var hay = (p.title + ' ' + p.section + ' ' + p.summary + ' ' + p.tags.join(' ')).toLowerCase();
+      var score = terms.reduce(function(s, t) {
+        if (p.title.toLowerCase().includes(t)) return s + 3;
+        if (hay.includes(t)) return s + 1;
+        return s;
+      }, 0);
+      return { page: p, score: score };
+    }).filter(function(x) { return x.score > 0; })
+      .sort(function(a, b) { return b.score - a.score; })
+      .slice(0, 8);
+
+    if (!scored.length) {
+      results.innerHTML = '<div class="search-empty">Geen resultaten voor "' + q + '"</div>';
+      selected = -1;
+      return;
+    }
+
+    results.innerHTML = scored.map(function(x, i) {
+      var p = x.page;
+      var tags = p.tags.length ? p.tags.map(function(t) {
+        return '<span class="search-tag">' + t + '</span>';
+      }).join('') : '';
+      return '<a class="search-result" href="' + p.url + '" data-idx="' + i + '">' +
+        '<div class="search-result-top">' +
+          '<span class="search-result-section">' + p.section + '</span>' +
+          (p.group ? '<span class="search-result-group">' + p.group + '</span>' : '') +
+        '</div>' +
+        '<div class="search-result-title">' + p.title + '</div>' +
+        (p.summary ? '<div class="search-result-summary">' + p.summary + '</div>' : '') +
+        (tags ? '<div class="search-result-tags">' + tags + '</div>' : '') +
+      '</a>';
+    }).join('');
+
+    selected = -1;
+  }
+
+  function move(dir) {
+    var items = results.querySelectorAll('.search-result');
+    if (!items.length) return;
+    items[Math.max(0, selected)].classList.remove('is-selected');
+    selected = Math.max(0, Math.min(items.length - 1, selected + dir));
+    items[selected].classList.add('is-selected');
+    items[selected].scrollIntoView({ block: 'nearest' });
+  }
+
+  // Keyboard shortcut Ctrl+K / Cmd+K
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); open(); return; }
+    if (!overlay.classList.contains('is-open')) return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); move(1); return; }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); move(-1); return; }
+    if (e.key === 'Enter') {
+      var sel = results.querySelector('.search-result.is-selected');
+      if (sel) { window.location.href = sel.href; close(); }
+    }
+  });
+
+  input.addEventListener('input', function() { search(this.value); selected = -1; });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) close();
+  });
+
+  results.addEventListener('click', function() { close(); });
+
+  // Expose open for the sidebar button
+  window.openSearch = open;
+})();
+</script>

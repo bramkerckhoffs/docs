@@ -1,0 +1,16 @@
+{{ define "main" }}
+
+<div class="page-eyebrow">Tag</div>
+<h1>{{ .Title }}</h1>
+
+<div class="doc-cards">
+  {{ range .Pages.ByDate.Reverse }}
+  <a class="doc-card" href="{{ .RelPermalink }}">
+    <span class="doc-card-title">{{ .Title }}</span>
+    {{ with .Params.intro }}<span class="doc-card-desc">{{ . }}</span>{{ end }}
+    <span class="doc-card-meta">{{ .Section | title }}{{ with .Date }} · {{ .Format "02 Jan 2006" }}{{ end }}</span>
+  </a>
+  {{ end }}
+</div>
+
+{{ end }}
