@@ -1,11 +1,14 @@
 ---
-title: "Alle elementen"
-intro: "Een compleet overzicht van alle opmaakelementen die je kunt gebruiken in artikelen — van koppen en tabellen tot diagrammen, callouts en code tabs."
+title: Alle elementen
+intro: Een compleet overzicht van alle opmaakelementen die je kunt gebruiken in
+  artikelen — van koppen en tabellen tot diagrammen, callouts en code tabs.
 weight: 1
-date: "2026-03-01"
-tags: ["docs", "stijlgids", "markdown"]
+date: 2026-03-01
+tags:
+  - docs
+  - stijlgids
+  - markdown
 ---
-
 ## Koppen
 
 Kop 2 gebruik je voor hoofdsecties. Elke `h2` verschijnt automatisch in de inhoudsopgave rechts. Hover over een kop om de anchor-link te kopiëren.
@@ -18,7 +21,7 @@ Kop 3 groepeert verwante onderwerpen binnen een sectie.
 
 Gebruik kop 4 spaarzaam, alleen voor extra detailniveau.
 
----
+- - -
 
 ## Tekst & nadruk
 
@@ -26,18 +29,19 @@ Normale paragraaftekst heeft een regelafstand van 1,75. **Vetgedrukte tekst** ge
 
 Doorgestreepte tekst wordt zo geschreven: ~~verouderde waarde~~.
 
----
+- - -
 
 ## Lijsten
 
 **Ongesorteerd:**
 
-- Azure Resource Groups
-- Storage Accounts
-- Virtual Networks
-  - Subnets
-  - Network Security Groups
-  - Route Tables
+* Azure Resource Groups
+* Storage Accounts
+* Virtual Networks
+
+  * Subnets
+  * Network Security Groups
+  * Route Tables
 
 **Gesorteerd:**
 
@@ -45,7 +49,7 @@ Doorgestreepte tekst wordt zo geschreven: ~~verouderde waarde~~.
 2. `terraform plan` — toont wat er gaat veranderen
 3. `terraform apply` — voert de wijzigingen door
 
----
+- - -
 
 ## Citaten
 
@@ -53,18 +57,18 @@ Doorgestreepte tekst wordt zo geschreven: ~~verouderde waarde~~.
 >
 > — HashiCorp
 
----
+- - -
 
 ## Tabellen
 
-| Resource             | Type            | Locatie       | SKU           |
-|----------------------|-----------------|---------------|---------------|
-| rg-webapp-prod       | Resource Group  | West Europe   | —             |
-| st-webapp-prod       | Storage Account | West Europe   | Standard_LRS  |
-| vnet-webapp-prod     | Virtual Network | West Europe   | —             |
-| nsg-webapp-prod      | NSG             | West Europe   | —             |
+| Resource         | Type            | Locatie     | SKU          |
+| ---------------- | --------------- | ----------- | ------------ |
+| rg-webapp-prod   | Resource Group  | West Europe | —            |
+| st-webapp-prod   | Storage Account | West Europe | Standard_LRS |
+| vnet-webapp-prod | Virtual Network | West Europe | —            |
+| nsg-webapp-prod  | NSG             | West Europe | —            |
 
----
+- - -
 
 ## Code blokken
 
@@ -118,7 +122,7 @@ jobs:
 }
 ```
 
----
+- - -
 
 ## Code tabs
 
@@ -126,31 +130,37 @@ Gebruik tabs als je hetzelfde onderwerp in meerdere talen of tools wilt tonen.
 
 {{< tabs >}}
 {{< tab name="Terraform" >}}
+
 ```hcl
 resource "azurerm_resource_group" "rg" {
   name     = "rg-webapp-prod"
   location = "West Europe"
 }
 ```
+
 {{< /tab >}}
 {{< tab name="Bicep" >}}
+
 ```bicep
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: 'rg-webapp-prod'
   location: 'westeurope'
 }
 ```
+
 {{< /tab >}}
 {{< tab name="Azure CLI" >}}
+
 ```bash
 az group create \
   --name rg-webapp-prod \
   --location westeurope
 ```
+
 {{< /tab >}}
 {{< /tabs >}}
 
----
+- - -
 
 ## Callouts
 
@@ -176,7 +186,11 @@ Sla nooit secrets op in je Terraform-bestanden of git-repository. Gebruik Azure 
 `terraform destroy` verwijdert **alle** resources in je state. Voer dit nooit uit in een productie-omgeving zonder expliciete goedkeuring.
 {{< /callout >}}
 
----
+- - -
+
+![](https://wallpapers.com/images/hd/clear-sky-at-norway-fjords-flt7e2f3p6381f6e.jpg)
+
+- - -
 
 ## Mermaid diagrammen
 
@@ -184,20 +198,20 @@ Diagrammen maak je met de `mermaid` shortcode. Flowcharts, sequence diagrams en 
 
 {{< mermaid >}}
 flowchart TD
-  code["📝 Code\n(.tf bestanden)"] --> init["terraform init"]
-  init --> plan["terraform plan"]
+  code\["📝 Code\n(.tf bestanden)"] --> init\["terraform init"]
+  init --> plan\["terraform plan"]
   plan --> review{"Review\ngoedgekeurd?"}
-  review -->|ja| apply["terraform apply"]
+  review -->|ja| apply\["terraform apply"]
   review -->|nee| code
-  apply --> state["State opgeslagen\n(Azure Blob)"]
-  apply --> infra["☁️ Azure\nInfrastructuur"]
+  apply --> state\["State opgeslagen\n(Azure Blob)"]
+  apply --> infra\["☁️ Azure\nInfrastructuur"]
 {{< /mermaid >}}
 
----
+- - -
 
 ## Links
 
-- Interne link: [Terraform overzicht](/terraform/overzicht/)
-- Interne link: [State beheer](/terraform/state-beheer/)
-- Externe link: [Azure documentatie](https://learn.microsoft.com/azure)
-- Externe link: [Terraform registry](https://registry.terraform.io)
+* Interne link: [Terraform overzicht](/terraform/overzicht/)
+* Interne link: [State beheer](/terraform/state-beheer/)
+* Externe link: [Azure documentatie](https://learn.microsoft.com/azure)
+* Externe link: [Terraform registry](https://registry.terraform.io)
