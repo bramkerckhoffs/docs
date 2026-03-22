@@ -13,8 +13,9 @@
 </div>
 
 <div class="filter-status" id="filterStatus"></div>
+<div class="filter-empty" id="filterEmpty">Selecteer een tag hierboven om artikelen te filteren.</div>
 
-<div id="filteredArticles">
+<div id="filteredArticles" style="display:none">
   {{ range .Site.RegularPages }}
   {{ $tags := .Params.tags }}
   {{ if $tags }}
@@ -36,6 +37,7 @@
   var filtersEl  = document.getElementById('tagFilters');
   var articlesEl = document.getElementById('filteredArticles');
   var statusEl   = document.getElementById('filterStatus');
+  var emptyEl    = document.getElementById('filterEmpty');
 
   /* Pre-select tags from URL ?t=tag1,tag2 */
   var params = new URLSearchParams(window.location.search);
@@ -79,9 +81,13 @@
     });
 
     if (active.size > 0) {
+      articlesEl.style.display = '';
+      emptyEl.style.display = 'none';
       statusEl.textContent = visible + ' artikel' + (visible === 1 ? '' : 'en') + ' met ' +
         Array.from(active).map(function (t) { return '"' + t + '"'; }).join(' + ');
     } else {
+      articlesEl.style.display = 'none';
+      emptyEl.style.display = '';
       statusEl.textContent = '';
     }
   }
