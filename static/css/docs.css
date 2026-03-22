@@ -27,18 +27,39 @@ html.no-transition * { transition-duration: 0ms !important; }
   --text:         #e8e6e0;
   --muted:        #888682;
   --hint:         #444240;
-  --green:        #3ecf8e;
-  --green-dim:    #0f2a1e;
-  --font-sans:    'IBM Plex Sans', system-ui, sans-serif;
+  --green:          #3ecf8e;
+  --green-dim:      #0f2a1e;
+  --border-hover:   #3a3a3a;
+  --bg-code-header: #111111;
+  --font-sans:      'IBM Plex Sans', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
   --rail-w:       56px;
   --panel-w:      224px;
   --topbar-h:     48px;
 }
 
+/* ── Licht thema ────────────────────────── */
+:root[data-theme="light"] {
+  --bg:             #f7f7f5;
+  --bg-soft:        #efefec;
+  --bg-card:        #ffffff;
+  --bg-hover:       #e8e8e5;
+  --bg-code:        #181818;  /* code-blokken altijd donker (dracula syntax) */
+  --bg-code-header: #1e1e1e;
+  --border:         #ddddd8;
+  --border-hover:   #b0b0aa;
+  --text:           #1a1a18;
+  --muted:          #555550;
+  --hint:           #99998f;
+  --green:               #059669;
+  --green-dim:           #d1fae5;
+  --callout-warning-bg:  #fef9ec;
+}
+
 html { font-size: 16px; }
 body {
   font-family: var(--font-sans);
+  font-size: 15px;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
@@ -291,6 +312,7 @@ body.panel-open .main { margin-left: calc(var(--rail-w) + var(--panel-w)); }
 /* ── Topbar search button ───────────────── */
 .topbar-search-btn {
   margin-left: auto;
+  margin-right: 8px;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -305,7 +327,7 @@ body.panel-open .main { margin-left: calc(var(--rail-w) + var(--panel-w)); }
   transition: background 0.15s, border-color 0.15s;
   flex-shrink: 0;
 }
-.topbar-search-btn:hover { background: var(--bg-hover); border-color: #3a3a3a; }
+.topbar-search-btn:hover { background: var(--bg-hover); border-color: var(--border-hover); }
 .topbar-search-btn svg { width: 14px; height: 14px; color: var(--muted); }
 .topbar-search-btn kbd {
   font-size: 10px;
@@ -584,7 +606,7 @@ blockquote p:last-child:not(:first-child) {
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px 6px 14px;
-  background: #111;
+  background: var(--bg-code-header);
   border-bottom: 1px solid var(--border);
 }
 
@@ -653,7 +675,7 @@ blockquote p:last-child:not(:first-child) {
 
 .callout p { margin: 0; font-size: 14px; color: var(--muted); }
 
-.callout.warning { border-left-color: #e6a817; background: #201a08; }
+.callout.warning { border-left-color: #e6a817; background: var(--callout-warning-bg, #201a08); }
 .callout.warning strong { color: #e6a817; }
 
 /* ── Homepage ───────────────────────────── */
@@ -712,7 +734,7 @@ blockquote p:last-child:not(:first-child) {
   transition: border-color 0.15s, background 0.15s;
 }
 
-.home-section-card:hover { border-color: #3a3a3a; background: var(--bg-hover); }
+.home-section-card:hover { border-color: var(--border-hover); background: var(--bg-hover); }
 
 .hsc-icon {
   width: 36px; height: 36px;
@@ -940,7 +962,7 @@ blockquote p:last-child:not(:first-child) {
   transition: border-color 0.15s, background 0.15s;
 }
 
-.doc-card:hover { border-color: #3a3a3a; background: var(--bg-hover); }
+.doc-card:hover { border-color: var(--border-hover); background: var(--bg-hover); }
 
 .doc-card-title { font-size: 14px; font-weight: 500; color: var(--text); }
 
@@ -970,7 +992,7 @@ blockquote p:last-child:not(:first-child) {
   cursor: pointer;
   transition: color 0.12s, border-color 0.12s, background 0.12s;
 }
-.tag-filter:hover { color: var(--text); border-color: #3a3a3a; background: var(--bg-hover); }
+.tag-filter:hover { color: var(--text); border-color: var(--border-hover); background: var(--bg-hover); }
 .tag-filter.is-active { color: var(--green); border-color: var(--green); background: var(--green-dim); }
 
 .tag-filter-count {
@@ -1222,3 +1244,113 @@ body.mobile-nav-open .mobile-nav-overlay { display: block; }
   .article-toc    { display: none; }
   .article-body   { max-width: none; }
 }
+
+/* ── Thema toggle knop ──────────────────── */
+.theme-toggle {
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.theme-toggle:hover { background: var(--bg-hover); color: var(--text); border-color: var(--border-hover); }
+.theme-toggle svg { width: 15px; height: 15px; }
+
+:root[data-theme="dark"]  .theme-toggle .icon-light { display: none; }
+:root[data-theme="light"] .theme-toggle .icon-dark  { display: none; }
+
+/* ── Gerelateerde artikelen ─────────────── */
+.related-articles {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.related-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--hint);
+  margin-bottom: 12px;
+}
+
+.related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.related-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: border-color 0.12s, background 0.12s;
+}
+.related-item:hover { border-color: var(--border-hover); background: var(--bg-hover); }
+
+.related-item-section {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hint);
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.related-item-title { font-size: 13.5px; color: var(--text); }
+
+/* ── 404 pagina ─────────────────────────── */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 48px;
+}
+
+.not-found-code {
+  font-size: 72px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 16px;
+  letter-spacing: -0.04em;
+}
+
+.not-found-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.not-found-desc {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.not-found-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: var(--green);
+  color: #000;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+.not-found-btn:hover { opacity: 0.85; color: #000; }

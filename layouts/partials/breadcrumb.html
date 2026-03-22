@@ -2,7 +2,7 @@
   {{ if .IsHome }}
   <span class="current">{{ .Site.Title }}</span>
   {{ else }}
-  <a href="/">{{ .Site.Title }}</a>
+  <a href="{{ .Site.Home.RelPermalink }}">{{ .Site.Title }}</a>
   {{ range .Ancestors.Reverse }}
     {{ if not .IsHome }}
     <span class="sep">›</span>

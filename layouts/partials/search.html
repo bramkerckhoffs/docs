@@ -41,7 +41,7 @@
   }
 
   function loadIndex() {
-    fetch('/index.json')
+    fetch('{{ "index.json" | absURL }}')
       .then(function(r) { return r.json(); })
       .then(function(data) {
         index = data;
@@ -54,7 +54,7 @@
     var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
 
     var scored = index.map(function(p) {
-      var hay = (p.title + ' ' + p.section + ' ' + p.summary + ' ' + p.tags.join(' ')).toLowerCase();
+      var hay = (p.title + ' ' + p.section + ' ' + p.summary + ' ' + (p.content || '') + ' ' + p.tags.join(' ')).toLowerCase();
       var score = terms.reduce(function(s, t) {
         if (p.title.toLowerCase().includes(t)) return s + 3;
         if (hay.includes(t)) return s + 1;

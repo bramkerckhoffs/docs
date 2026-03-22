@@ -1,0 +1,8 @@
+{{ define "main" }}
+<div class="not-found">
+  <div class="not-found-code">404</div>
+  <h1 class="not-found-title">Pagina niet gevonden</h1>
+  <p class="not-found-desc">De pagina die je zoekt bestaat niet of is verplaatst.</p>
+  <a href="{{ .Site.Home.RelPermalink }}" class="not-found-btn">Terug naar home</a>
+</div>
+{{ end }}

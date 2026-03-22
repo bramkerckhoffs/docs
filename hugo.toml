@@ -1,7 +1,7 @@
 baseURL = 'https://bramkerckhoffs.github.io/docs/'
 languageCode = 'nl'
 title = 'Bram Kerckhoffs'
-enableGitInfo = false
+enableGitInfo = true
 
 [markup.highlight]
   style = 'dracula'

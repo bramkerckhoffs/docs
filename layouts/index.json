@@ -8,7 +8,8 @@
   "section": {{ $p.Section | jsonify }},
   "tags":    {{ with $p.Params.tags }}{{ . | jsonify }}{{ else }}[]{{ end }},
   "group":   {{ with $p.Params.group }}{{ . | jsonify }}{{ else }}""{{ end }},
-  "summary": {{ with $p.Params.intro }}{{ . | jsonify }}{{ else }}{{ $p.Plain | truncate 140 | jsonify }}{{ end }}
+  "summary": {{ with $p.Params.intro }}{{ . | jsonify }}{{ else }}{{ $p.Plain | truncate 140 | jsonify }}{{ end }},
+  "content": {{ $p.Plain | truncate 800 | jsonify }}
 }
 {{- end }}
 ]

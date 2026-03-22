@@ -3,6 +3,17 @@
 {{ $tags := .Params.tags }}
 {{ $showRight := or $toc $tags }}
 
+{{/* Gerelateerde artikelen op basis van tags */}}
+{{ $related := slice }}
+{{ if $tags }}
+  {{ range .Site.RegularPages }}
+    {{ if and (ne .Permalink $.Permalink) (intersect .Params.tags $tags) }}
+      {{ $related = $related | append . }}
+    {{ end }}
+  {{ end }}
+  {{ $related = first 3 $related }}
+{{ end }}
+
 <div class="article-layout{{ if $showRight }} has-toc{{ end }}">
 
   <div class="article-body">
@@ -29,6 +40,20 @@
 
     {{ partial "page-nav.html" . }}
 
+    {{ if $related }}
+    <div class="related-articles">
+      <div class="related-label">Gerelateerde artikelen</div>
+      <div class="related-list">
+        {{ range $related }}
+        <a class="related-item" href="{{ .RelPermalink }}">
+          <span class="related-item-section">{{ .Section | title }}</span>
+          <span class="related-item-title">{{ .Title }}</span>
+        </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
   </div>
 
   {{ if $showRight }}
@@ -40,7 +65,7 @@
       <div class="toc-label">Tags</div>
       <div class="toc-tags">
         {{ range . }}
-        <a href="/tags/?t={{ . | urlize }}" class="toc-tag">{{ . }}</a>
+        <a href="{{ "tags/" | absURL }}?t={{ . | urlize }}" class="toc-tag">{{ . }}</a>
         {{ end }}
       </div>
     </div>
