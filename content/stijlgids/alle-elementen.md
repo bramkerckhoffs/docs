@@ -1,6 +1,6 @@
 ---
 title: "Alle elementen"
-intro: "Een compleet overzicht van alle opmaakelementen die je kunt gebruiken in artikelen — van koppen en tabellen tot diagrammen en callouts."
+intro: "Een compleet overzicht van alle opmaakelementen die je kunt gebruiken in artikelen — van koppen en tabellen tot diagrammen, callouts en code tabs."
 weight: 1
 date: "2026-03-01"
 tags: ["docs", "stijlgids", "markdown"]
@@ -8,7 +8,7 @@ tags: ["docs", "stijlgids", "markdown"]
 
 ## Koppen
 
-Kop 2 gebruik je voor hoofdsecties. Elke `h2` verschijnt automatisch in de inhoudsopgave rechts.
+Kop 2 gebruik je voor hoofdsecties. Elke `h2` verschijnt automatisch in de inhoudsopgave rechts. Hover over een kop om de anchor-link te kopiëren.
 
 ### Kop 3 — Subonderdelen
 
@@ -120,14 +120,60 @@ jobs:
 
 ---
 
+## Code tabs
+
+Gebruik tabs als je hetzelfde onderwerp in meerdere talen of tools wilt tonen.
+
+{{< tabs >}}
+{{< tab name="Terraform" >}}
+```hcl
+resource "azurerm_resource_group" "rg" {
+  name     = "rg-webapp-prod"
+  location = "West Europe"
+}
+```
+{{< /tab >}}
+{{< tab name="Bicep" >}}
+```bicep
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: 'rg-webapp-prod'
+  location: 'westeurope'
+}
+```
+{{< /tab >}}
+{{< tab name="Azure CLI" >}}
+```bash
+az group create \
+  --name rg-webapp-prod \
+  --location westeurope
+```
+{{< /tab >}}
+{{< /tabs >}}
+
+---
+
 ## Callouts
 
-{{< callout title="Tip" >}}
+Er zijn vijf typen callouts beschikbaar.
+
+{{< callout type="tip" >}}
 Gebruik een remote backend voor Terraform state zodat je veilig in een team kunt werken. Azure Blob Storage is de meest gebruikte optie.
 {{< /callout >}}
 
-{{< callout title="Let op" type="warning" >}}
+{{< callout type="info" >}}
+Terraform slaat de huidige staat van je infrastructuur op in een `terraform.tfstate` bestand. Dit bestand bevat gevoelige informatie — bewaar het nooit in een publieke repository.
+{{< /callout >}}
+
+{{< callout type="note" >}}
+De volgorde van resources in je `.tf` bestanden maakt niet uit. Terraform bepaalt zelf de juiste volgorde op basis van afhankelijkheden.
+{{< /callout >}}
+
+{{< callout type="warning" >}}
 Sla nooit secrets op in je Terraform-bestanden of git-repository. Gebruik Azure Key Vault of omgevingsvariabelen via een CI/CD-pipeline.
+{{< /callout >}}
+
+{{< callout type="danger" >}}
+`terraform destroy` verwijdert **alle** resources in je state. Voer dit nooit uit in een productie-omgeving zonder expliciete goedkeuring.
 {{< /callout >}}
 
 ---

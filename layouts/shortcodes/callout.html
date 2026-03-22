@@ -1,4 +1,14 @@
-<div class="callout {{ .Get "type" }}">
-  <strong>{{ .Get "title" | default "Info" }}</strong>
-  <p>{{ .Inner | markdownify }}</p>
+{{ $type  := .Get "type"  | default "tip" }}
+{{ $title := .Get "title" }}
+{{ if not $title }}
+  {{ if      eq $type "warning" }}{{ $title = "Waarschuwing" }}
+  {{ else if eq $type "danger"  }}{{ $title = "Let op" }}
+  {{ else if eq $type "info"    }}{{ $title = "Info" }}
+  {{ else if eq $type "note"    }}{{ $title = "Notitie" }}
+  {{ else                        }}{{ $title = "Tip" }}
+  {{ end }}
+{{ end }}
+<div class="callout {{ $type }}">
+  <strong>{{ $title }}</strong>
+  {{ .Inner | markdownify }}
 </div>

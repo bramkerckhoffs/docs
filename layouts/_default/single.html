@@ -18,6 +18,16 @@
 
   <div class="article-body">
 
+    {{ if $toc }}
+    <details class="mobile-toc">
+      <summary>
+        Op deze pagina
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="mobile-toc-body">{{ $toc }}</div>
+    </details>
+    {{ end }}
+
     {{ with .Params.section }}
     <div class="page-eyebrow">{{ . }}</div>
     {{ end }}

@@ -249,5 +249,91 @@
   </script>
   {{ end }}
 
+  {{/* Afbeelding zoom (lightbox) */}}
+  <script>
+  (function () {
+    var lb = document.createElement('div');
+    lb.className = 'img-lightbox';
+    lb.innerHTML = '<img>';
+    document.body.appendChild(lb);
+    var lbImg = lb.querySelector('img');
+
+    document.querySelectorAll('.article-body img').forEach(function (img) {
+      if (img.closest('a')) return;
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', function () {
+        lbImg.src = img.src;
+        lb.classList.add('is-open');
+      });
+    });
+
+    lb.addEventListener('click', function () { lb.classList.remove('is-open'); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') lb.classList.remove('is-open');
+    });
+  })();
+  </script>
+
+  {{/* Sectie voortgang */}}
+  <script>
+  (function () {
+    var key = 'visited-pages';
+    var visited = JSON.parse(localStorage.getItem(key) || '[]');
+    var cur = window.location.pathname;
+    if (!visited.includes(cur)) { visited.push(cur); localStorage.setItem(key, JSON.stringify(visited)); }
+
+    document.querySelectorAll('.nav-panel').forEach(function (panel) {
+      var items = Array.from(panel.querySelectorAll('.panel-item:not(.panel-more)'));
+      if (!items.length) return;
+      var total = items.length;
+      var done  = items.filter(function (a) { return visited.includes(new URL(a.href).pathname); }).length;
+
+      var header = panel.querySelector('.panel-header');
+      if (!header) return;
+
+      var bar = document.createElement('div');
+      bar.className = 'panel-progress';
+      var fill = document.createElement('div');
+      fill.className = 'panel-progress-bar';
+      fill.style.width = (done / total * 100) + '%';
+      bar.appendChild(fill);
+
+      var label = document.createElement('div');
+      label.className = 'panel-progress-label';
+      label.textContent = done + ' van ' + total + ' gelezen';
+
+      header.insertAdjacentElement('afterend', label);
+      header.insertAdjacentElement('afterend', bar);
+    });
+  })();
+  </script>
+
+  {{/* Code tabs */}}
+  <script>
+  (function () {
+    document.querySelectorAll('[data-tabs]').forEach(function (tabs) {
+      tabs.querySelectorAll('.code-tab-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var idx = btn.getAttribute('data-tab');
+          tabs.querySelectorAll('.code-tab-btn').forEach(function (b) { b.classList.remove('is-active'); });
+          tabs.querySelectorAll('.code-tab-panel').forEach(function (p) { p.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          tabs.querySelector('.code-tab-panel[data-panel="' + idx + '"]').classList.add('is-active');
+        });
+      });
+    });
+  })();
+  </script>
+
+  {{/* Service worker registratie */}}
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('{{ "sw.js" | absURL }}')
+        .catch(function () {});
+    });
+  }
+  </script>
+
 </body>
 </html>

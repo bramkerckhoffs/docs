@@ -1,0 +1,3 @@
+{{ $tabs := .Page.Store.Get "tabs" | default slice }}
+{{ $entry := dict "name" (.Get "name") "content" .Inner }}
+{{ .Page.Store.Set "tabs" ($tabs | append $entry) }}

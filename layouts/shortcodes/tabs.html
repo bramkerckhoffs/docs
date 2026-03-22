@@ -1,0 +1,15 @@
+{{- .InnerDeindent -}}
+<div class="code-tabs" data-tabs>
+  <div class="code-tabs-nav" role="tablist">
+    {{ range $i, $p := .Page.Store.Get "tabs" }}
+    <button class="code-tab-btn{{ if eq $i 0 }} is-active{{ end }}"
+            role="tab" data-tab="{{ $i }}">{{ $p.name }}</button>
+    {{ end }}
+  </div>
+  {{ range $i, $p := .Page.Store.Get "tabs" }}
+  <div class="code-tab-panel{{ if eq $i 0 }} is-active{{ end }}" data-panel="{{ $i }}">
+    {{ $p.content | safeHTML }}
+  </div>
+  {{ end }}
+</div>
+{{ .Page.Store.Delete "tabs" }}
