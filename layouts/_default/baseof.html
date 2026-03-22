@@ -4,7 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
-  <meta name="description" content="{{ .Site.Params.description }}">
+  {{ $desc := .Site.Params.description }}
+  {{ with .Params.intro }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | truncate 160 }}{{ end }}{{ end }}
+  <meta name="description" content="{{ $desc }}">
+  <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}">
+  <meta property="og:description" content="{{ $desc }}">
+  <meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta name="twitter:description" content="{{ $desc }}">
   <link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | absURL }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -21,6 +31,9 @@
 {{/* panel-open server-side: voorkomt layout-jump als JS de class later toevoegt */}}
 {{ $panelOpen := and (not .IsHome) (ne .Section "") }}
 <body{{ if $panelOpen }} class="panel-open"{{ end }}>
+
+  <a href="#main-content" class="skip-to-content">Ga naar inhoud</a>
+  <div class="reading-progress" id="readingProgress"></div>
 
   {{ partial "sidebar.html" . }}
   {{ partial "mobile-nav.html" . }}
@@ -54,10 +67,16 @@
         <kbd>Ctrl K</kbd>
       </button>
     </div>
-    <div class="content">
+    <div class="content" id="main-content">
       {{ block "main" . }}{{ end }}
     </div>
   </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Terug naar boven">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
 
   {{/* Mobiele nav */}}
   <script>
@@ -151,6 +170,75 @@
       document.documentElement.classList.remove('no-transition');
     });
   });
+  </script>
+
+  {{/* Leesvoortgangsbalk + terug naar top */}}
+  <script>
+  (function () {
+    var bar = document.getElementById('readingProgress');
+    var btn = document.getElementById('backToTop');
+    function update() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar && docHeight > 0) bar.style.width = (scrollTop / docHeight * 100) + '%';
+      if (btn) {
+        if (scrollTop > 300) btn.classList.add('is-visible');
+        else btn.classList.remove('is-visible');
+      }
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    if (btn) btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  })();
+  </script>
+
+  {{/* Anchor links op h2/h3 koppen */}}
+  <script>
+  (function () {
+    var LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+    document.querySelectorAll('.article-body h2[id], .article-body h3[id]').forEach(function (h) {
+      var a = document.createElement('a');
+      a.className = 'heading-anchor';
+      a.href = '#' + h.id;
+      a.innerHTML = LINK;
+      a.title = 'Kopieer link';
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var url = location.href.split('#')[0] + '#' + h.id;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); } catch(e) {}
+          document.body.removeChild(ta);
+        }
+        a.classList.add('copied');
+        setTimeout(function () { a.classList.remove('copied'); }, 1500);
+      });
+      h.appendChild(a);
+    });
+  })();
+  </script>
+
+  {{/* Keyboard shortcuts */}}
+  <script>
+  (function () {
+    document.addEventListener('keydown', function (e) {
+      var tag = document.activeElement && document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+      switch (e.key) {
+        case '/':
+          e.preventDefault();
+          if (typeof openSearch === 'function') openSearch();
+          break;
+        case 't':
+          var btn = document.getElementById('themeToggle');
+          if (btn) btn.click();
+          break;
+      }
+    });
+  })();
   </script>
 
   {{ if .Content | strings.Contains "mermaid" }}
