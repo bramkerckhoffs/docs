@@ -1230,11 +1230,12 @@ body.mobile-nav-open .mobile-nav-overlay { display: block; }
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-radius: 7px;
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--muted);
   transition: background 0.15s, color 0.15s;
+  min-height: 44px;
 }
 .mobile-item svg { width: 16px; height: 16px; flex-shrink: 0; }
 .mobile-item:hover { background: var(--bg-hover); color: var(--text); }
@@ -1277,9 +1278,10 @@ body.mobile-nav-open .mobile-nav-overlay { display: block; }
 
 .mobile-subitem {
   display: block;
-  padding: 6px 10px 6px 36px;
+  padding: 9px 10px 9px 36px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 14px;
+  min-height: 40px;
   color: var(--muted);
   border-left: 2px solid transparent;
   transition: background 0.12s, color 0.12s;
@@ -1326,22 +1328,71 @@ body.mobile-nav-open .mobile-nav-overlay { display: block; }
 
 /* ── Mobile responsive ──────────────────── */
 @media (max-width: 768px) {
+  /* ── Navigatie ── */
   .nav-rail  { display: none; }
   .nav-panel { display: none; }
-
   .mobile-menu-btn { display: flex; }
-  .topbar-search-btn kbd { display: none; }
-
   body.panel-open .main { margin-left: 0; }
-  .main    { margin-left: 0; }
-  .content { padding: 24px 20px 60px; }
-  .topbar  { padding: 0 16px; }
+  .main { margin-left: 0; }
 
-  .search-overlay { padding-top: 20px; }
-  .search-modal   { margin: 0 12px; }
+  /* ── Topbar ── */
+  .topbar { padding: 0 14px; gap: 6px; }
+  .topbar-search-btn kbd { display: none; }
+  .topbar-search-btn span { display: none; }
+  .topbar-search-btn { padding: 6px 10px; gap: 0; }
 
-  .article-toc    { display: none; }
-  .article-body   { max-width: none; }
+  /* Breadcrumb: verberg alles behalve huidige pagina */
+  .breadcrumb a:not(:last-of-type),
+  .breadcrumb .sep { display: none; }
+  .breadcrumb { font-size: 13px; font-weight: 500; color: var(--text); }
+
+  /* ── Content ── */
+  .content { padding: 20px 16px 80px; }
+
+  /* ── Typografie ── */
+  h1 { font-size: 22px; }
+  h2 { font-size: 16px; }
+  h3 { font-size: 14px; }
+  p, li { font-size: 15px; }
+
+  /* ── Article ── */
+  .article-toc  { display: none; }
+  .article-body { max-width: none; }
+  .article-layout { gap: 0; }
+
+  /* ── Zoek modal ── */
+  .search-overlay { padding-top: 0; align-items: flex-end; }
+  .search-modal   { margin: 0; border-radius: 16px 16px 0 0; max-width: 100%; }
+
+  /* ── Terug naar top ── */
+  .back-to-top { bottom: 16px; right: 16px; }
+
+  /* ── Tabellen: horizontaal scrollbaar ── */
+  .article-body table { font-size: 13px; }
+
+  /* ── Code blokken ── */
+  .highlight pre { font-size: 12px; padding: 14px 14px; }
+  .code-header   { padding: 5px 8px 5px 12px; }
+
+  /* ── Homepage ── */
+  .home-brand    { font-size: 26px; }
+  .home-stats    { gap: 14px; }
+  .stat-num      { font-size: 17px; }
+  .home-section-card { padding: 14px 14px; gap: 12px; }
+  .hsc-icon      { width: 30px; height: 30px; }
+  .recent-item   { padding: 8px 6px; }
+
+  /* ── Pagina navigatie (vorige/volgende) ── */
+  .page-nav { flex-direction: column; gap: 8px; margin-top: 40px; }
+  .page-nav-item.next { text-align: left; }
+
+  /* ── Gerelateerde artikelen ── */
+  .related-item { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .related-item-section { width: auto; }
+
+  /* ── Notched phones (iPhone e.d.) ── */
+  .content { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  .topbar  { padding-left: max(14px, env(safe-area-inset-left)); padding-right: max(14px, env(safe-area-inset-right)); }
 }
 
 /* ── Thema toggle knop ──────────────────── */
