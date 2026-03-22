@@ -5,49 +5,39 @@ backend:
   auth_type: pkce
   app_id: Ov23licpHqsoNciHAyVp
 
-# Afbeeldingen worden opgeslagen in static/images
 media_folder: static/images
-public_folder: /images
-
-# Taal van de CMS-interface
-locale: nl
+public_folder: /docs/images
 
 collections:
 
   - name: terraform
     label: Terraform
-    label_singular: Terraform artikel
     folder: content/terraform
     create: true
-    slug: "{{slug}}"
     fields:
       - { label: Titel, name: title, widget: string }
-      - { label: Intro, name: intro, widget: string, required: false, hint: Korte beschrijving die onder de titel verschijnt }
+      - { label: Intro, name: intro, widget: string, required: false }
       - { label: Datum, name: date, widget: datetime, format: "YYYY-MM-DD", time_format: false }
-      - { label: Volgorde, name: weight, widget: number, required: false, hint: Lagere nummers verschijnen eerst }
+      - { label: Volgorde, name: weight, widget: number, required: false }
       - { label: Tags, name: tags, widget: list, required: false }
       - { label: Inhoud, name: body, widget: markdown }
 
   - name: azure
     label: Azure
-    label_singular: Azure artikel
     folder: content/azure
     create: true
-    slug: "{{slug}}"
     fields:
       - { label: Titel, name: title, widget: string }
-      - { label: Intro, name: intro, widget: string, required: false, hint: Korte beschrijving die onder de titel verschijnt }
+      - { label: Intro, name: intro, widget: string, required: false }
       - { label: Datum, name: date, widget: datetime, format: "YYYY-MM-DD", time_format: false }
-      - { label: Volgorde, name: weight, widget: number, required: false, hint: Lagere nummers verschijnen eerst }
+      - { label: Volgorde, name: weight, widget: number, required: false }
       - { label: Tags, name: tags, widget: list, required: false }
       - { label: Inhoud, name: body, widget: markdown }
 
   - name: stijlgids
     label: Stijlgids
-    label_singular: Stijlgids artikel
     folder: content/stijlgids
     create: true
-    slug: "{{slug}}"
     fields:
       - { label: Titel, name: title, widget: string }
       - { label: Intro, name: intro, widget: string, required: false }
