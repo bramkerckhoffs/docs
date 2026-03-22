@@ -35,12 +35,6 @@
         </svg>
       </button>
       {{ partial "breadcrumb.html" . }}
-      <button class="topbar-search-btn" onclick="openSearch()" title="Zoeken (Ctrl+K)" aria-label="Zoeken">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <kbd>Ctrl K</kbd>
-      </button>
       <button class="theme-toggle" id="themeToggle" title="Thema wisselen" aria-label="Thema wisselen">
         <svg class="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
@@ -51,6 +45,12 @@
         <svg class="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
+      </button>
+      <button class="topbar-search-btn" onclick="openSearch()" title="Zoeken (Ctrl+K)" aria-label="Zoeken">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <kbd>Ctrl K</kbd>
       </button>
     </div>
     <div class="content">
@@ -155,14 +155,8 @@
   {{ if .Content | strings.Contains "mermaid" }}
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({
-      startOnLoad: true, theme: 'base',
-      themeVariables: {
-        background:'#181818', primaryColor:'#1e2a1e', primaryTextColor:'#e8e6e0',
-        primaryBorderColor:'#2a2a2a', lineColor:'#3ecf8e', secondaryColor:'#1a1a1a',
-        tertiaryColor:'#222222', edgeLabelBackground:'#141414', titleColor:'#e8e6e0',
-      }
-    });
+    mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+    mermaid.run({ querySelector: '.mermaid' });
   </script>
   {{ end }}
 

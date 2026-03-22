@@ -46,14 +46,15 @@ html.no-transition * { transition-duration: 0ms !important; }
   --bg-hover:       #e8e8e5;
   --bg-code:        #181818;  /* code-blokken altijd donker (dracula syntax) */
   --bg-code-header: #1e1e1e;
-  --border:         #ddddd8;
-  --border-hover:   #b0b0aa;
+  --border:         #d8d8d3;
+  --border-hover:   #a0a09a;
   --text:           #1a1a18;
-  --muted:          #555550;
-  --hint:           #99998f;
-  --green:               #059669;
-  --green-dim:           #d1fae5;
-  --callout-warning-bg:  #fef9ec;
+  --muted:          #44443f;  /* donkerder voor betere leesbaarheid */
+  --hint:           #77776e;  /* donkerder dan donker thema voor contrast */
+  --green:          #047857;  /* donkerder groen — leesbaar op wit */
+  --green-dim:      #ecfdf5;
+  --callout-warning-bg:    #fffbeb;
+  --callout-warning-color: #92400e;  /* donker amber ipv geel */
 }
 
 html { font-size: 16px; }
@@ -311,8 +312,6 @@ body.panel-open .main { margin-left: calc(var(--rail-w) + var(--panel-w)); }
 
 /* ── Topbar search button ───────────────── */
 .topbar-search-btn {
-  margin-left: auto;
-  margin-right: 8px;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -518,6 +517,16 @@ code {
   color: var(--text);
 }
 
+/* Reset inline-code stijlen binnen code-blokken — anders wordt de code
+   in lichtmodus wit (--bg-card) bovenop de donkere pre-achtergrond */
+.highlight pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
 /* ── Tabellen ───────────────────────────── */
 table {
   width: 100%;
@@ -583,16 +592,17 @@ blockquote p:last-child:not(:first-child) {
 }
 
 /* ── Code blocks ────────────────────────── */
+/* Code-blokken: altijd donker, ongeacht thema */
 .highlight {
   margin: 8px 0 24px;
   border-radius: 8px;
-  border: 1px solid var(--border);
+  border: 1px solid #2a2a2a;
   overflow: hidden;
   position: relative;
 }
 
 .highlight pre {
-  background: var(--bg-code) !important;
+  background: #181818 !important;
   padding: 18px 20px;
   overflow-x: auto;
   font-family: var(--font-mono);
@@ -606,8 +616,8 @@ blockquote p:last-child:not(:first-child) {
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px 6px 14px;
-  background: var(--bg-code-header);
-  border-bottom: 1px solid var(--border);
+  background: #111111;
+  border-bottom: 1px solid #2a2a2a;
 }
 
 .code-lang {
@@ -642,18 +652,33 @@ blockquote p:last-child:not(:first-child) {
 
 
 /* ── Mermaid diagrammen ─────────────────── */
+/* Mermaid: altijd donker, ongeacht thema */
 .mermaid-wrap {
   margin: 8px 0 24px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg-code);
+  border: 1px solid #2a2a2a;
+  background: #181818;
+  color: #e8e6e0;
   padding: 24px;
   display: flex;
   justify-content: center;
   overflow-x: auto;
 }
 
-.mermaid-wrap .mermaid svg { max-width: 100%; }
+.mermaid-wrap .mermaid svg {
+  max-width: 100%;
+  background: #181818 !important;
+}
+/* Forceer lichte tekst in mermaid — SVG text én foreignObject HTML-labels */
+.mermaid-wrap svg text,
+.mermaid-wrap svg .label,
+.mermaid-wrap svg .nodeLabel,
+.mermaid-wrap svg .edgeLabel { fill: #e8e6e0 !important; color: #e8e6e0 !important; }
+
+/* foreignObject: mermaid v11 flowcharts renderen labels als HTML in SVG */
+.mermaid-wrap svg foreignObject div,
+.mermaid-wrap svg foreignObject span,
+.mermaid-wrap svg foreignObject p { color: #e8e6e0 !important; background: transparent !important; }
 
 /* ── Callout ────────────────────────────── */
 .callout {
@@ -675,8 +700,8 @@ blockquote p:last-child:not(:first-child) {
 
 .callout p { margin: 0; font-size: 14px; color: var(--muted); }
 
-.callout.warning { border-left-color: #e6a817; background: var(--callout-warning-bg, #201a08); }
-.callout.warning strong { color: #e6a817; }
+.callout.warning { border-left-color: var(--callout-warning-color, #e6a817); background: var(--callout-warning-bg, #201a08); }
+.callout.warning strong { color: var(--callout-warning-color, #e6a817); }
 
 /* ── Homepage ───────────────────────────── */
 .home-header {
@@ -1255,6 +1280,8 @@ body.mobile-nav-open .mobile-nav-overlay { display: block; }
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  margin-left: auto;
+  margin-right: 6px;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 .theme-toggle:hover { background: var(--bg-hover); color: var(--text); border-color: var(--border-hover); }
