@@ -3,6 +3,7 @@ backend:
   repo: bramkerckhoffs/docs
   branch: main
   base_url: https://api.netlify.com
+  site_domain: lustrous-puffpuff-9ca837.netlify.app
 
 media_folder: static/images
 public_folder: /docs/images
