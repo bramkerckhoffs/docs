@@ -25,18 +25,41 @@
   </div>
 </div>
 
+{{/* Ga verder — gevuld door JS via localStorage */}}
+<div id="continueReading" style="display:none">
+  <div class="home-section-title">Ga verder</div>
+  <a class="continue-card" id="continueLink" href="#">
+    <div class="continue-body">
+      <span class="continue-section" id="continueSection"></span>
+      <span class="continue-title" id="continueTitle"></span>
+    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</div>
+
+{{/* Homepage zoekbalk */}}
+<button class="home-search" onclick="openSearch()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
+  <span>Zoek in alle artikelen…</span>
+  <kbd>Ctrl K</kbd>
+</button>
+
 {{/* Sectie overzicht */}}
-<div class="home-section-title">Secties</div>
+<div class="home-section-title" style="margin-top: 40px;">Secties</div>
 <div class="home-sections">
   {{ range .Site.Sections }}
   {{ $count := len .Pages }}
   {{ $recent := first 1 (.Pages.ByDate.Reverse) }}
+  {{ $totalTime := 0 }}
+  {{ range .Pages }}{{ $totalTime = add $totalTime .ReadingTime }}{{ end }}
   <a class="home-section-card" href="{{ .RelPermalink }}">
     <div class="hsc-icon">{{ partial "section-icon.html" . }}</div>
     <div class="hsc-body">
       <div class="hsc-title">{{ .Title }}</div>
       <div class="hsc-desc">{{ with .Params.description }}{{ . }}{{ end }}</div>
-      <div class="hsc-meta">{{ $count }} {{ if eq $count 1 }}artikel{{ else }}artikelen{{ end }}</div>
+      <div class="hsc-meta">{{ $count }} {{ if eq $count 1 }}artikel{{ else }}artikelen{{ end }}{{ if $totalTime }} · ~{{ $totalTime }} min lezen{{ end }}</div>
       {{ range $recent }}{{ if not .Date.IsZero }}
       <div class="hsc-updated">Bijgewerkt {{ .Date.Format "02 Jan 2006" }}</div>
       {{ end }}{{ end }}
@@ -57,5 +80,20 @@
   </a>
   {{ end }}
 </div>
+
+<script>
+(function () {
+  /* Ga verder */
+  var last = null;
+  try { last = JSON.parse(localStorage.getItem('last-page')); } catch(e) {}
+  if (last && last.url && last.title) {
+    document.getElementById('continueLink').href    = last.url;
+    document.getElementById('continueTitle').textContent   = last.title;
+    document.getElementById('continueSection').textContent = last.section || '';
+    document.getElementById('continueReading').style.display = 'block';
+    document.getElementById('continueReading').style.marginBottom = '40px';
+  }
+})();
+</script>
 
 {{ end }}

@@ -163,6 +163,35 @@
   })();
   </script>
 
+  {{/* Bijhouden laatste bezochte pagina + externe links */}}
+  <script>
+  (function () {
+    /* Sla huidige pagina op als 'laatste bezocht' (niet homepage) */
+    if (!document.querySelector('.home-brand')) {
+      var h1 = document.querySelector('.article-body h1, h1');
+      var section = document.querySelector('.breadcrumb a:nth-child(2)');
+      localStorage.setItem('last-page', JSON.stringify({
+        url:     window.location.href,
+        title:   h1 ? h1.textContent.trim() : document.title,
+        section: section ? section.textContent.trim() : '',
+      }));
+    }
+
+    /* Externe links: voeg ↗ icoon toe + open in nieuw tabblad */
+    document.querySelectorAll('.article-body a[href^="http"]').forEach(function (a) {
+      if (a.hostname === window.location.hostname) return;
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+      if (!a.querySelector('.ext-icon')) {
+        var icon = document.createElement('span');
+        icon.className = 'ext-icon';
+        icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+        a.appendChild(icon);
+      }
+    });
+  })();
+  </script>
+
   {{/* Heractiveer transities na eerste render */}}
   <script>
   requestAnimationFrame(function () {
