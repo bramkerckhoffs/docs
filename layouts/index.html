@@ -4,9 +4,20 @@
 {{ $totalPages := len $allPages }}
 
 <div class="home-header">
-  <div class="home-brand">Bram Kerckhoffs</div>
-  <p class="home-tagline">Persoonlijke kennisbank — Infrastructure as Code, Azure & meer.</p>
+  <div class="terminal-title">
+    <div class="tt-line">
+      <span class="tt-prompt">brem@firewallstroom</span><span class="tt-sep">:</span><span class="tt-path">~</span><span class="tt-dollar">$</span>
+      <span class="tt-cmd"> whoami</span>
+    </div>
+    <div class="tt-output">Bram Kerckhoffs</div>
+    <div class="tt-line" style="margin-top: 10px;">
+      <span class="tt-prompt">brem@firewallstroom</span><span class="tt-sep">:</span><span class="tt-path">~</span><span class="tt-dollar">$</span>
+      <span class="tt-cmd"> cat about.txt</span>
+    </div>
+    <div class="tt-tagline">Persoonlijke kennisbank — Infrastructure as Code, Azure & meer.<span class="tt-cursor"></span></div>
+  </div>
 
+  <div class="home-stats-divider"></div>
   <div class="home-stats">
     <div class="stat">
       <span class="stat-num">{{ $totalPages }}</span>
