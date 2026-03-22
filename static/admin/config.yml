@@ -1,9 +1,6 @@
 backend:
-  name: github
-  repo: bramkerckhoffs/docs
+  name: git-gateway
   branch: main
-  base_url: https://api.netlify.com
-  site_domain: lustrous-puffpuff-9ca837.netlify.app
 
 media_folder: static/images
 public_folder: /docs/images
