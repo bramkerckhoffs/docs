@@ -1677,6 +1677,15 @@ h3:hover .heading-anchor { opacity: 1; }
 :root[data-theme="light"] .callout.danger { background: #fef2f2; }
 :root[data-theme="light"] .callout.note   { background: #f5f3ff; }
 
+/* ── Afbeeldingen in artikelen ──────────── */
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+  margin: 1.5rem 0;
+}
+
 /* ── Afbeelding lightbox ────────────────── */
 .img-lightbox {
   position: fixed;
