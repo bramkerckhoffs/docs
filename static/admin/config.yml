@@ -3,7 +3,7 @@ backend:
   repo: bramkerckhoffs/docs
   branch: main
   auth_type: pkce
-  app_id: Ov23licpHqsoNciHAyVp
+  app_id: Ov23liw1xidVmcfKHca6
 
 media_folder: static/images
 public_folder: /docs/images
