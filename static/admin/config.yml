@@ -2,8 +2,7 @@ backend:
   name: github
   repo: bramkerckhoffs/docs
   branch: main
-  auth_type: pkce
-  app_id: Ov23liw1xidVmcfKHca6
+  base_url: https://api.netlify.com
 
 media_folder: static/images
 public_folder: /docs/images
